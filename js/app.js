@@ -5,23 +5,26 @@
 let leftImageElment = document.getElementById('leftImage');
 let midImageElment = document.getElementById('midImage');
 let rightImageElment = document.getElementById('rightImage');
+let sec1 = document.getElementById('sec1');
 
 let count = 0;
-let maxAttemp = 5;
+let maxAttemp = 10;
 
 let leftIndex;
 let midIndex;
 let rightIndex;
 Bus.allOfThem = [];
-
+let arrOfName = [];
 function Bus(name, source) {
     this.name = name;
     this.sourc = source;
     this.show = 0;
     this.vote = 0;
     Bus.allOfThem.push(this);
+    arrOfName.push(this.name)
 }
-console.log(Bus.allOfThem);
+// console.log(Bus.allOfThem);
+
 new Bus('bag', 'img/bag.jpg');
 new Bus('banana', 'img/banana.jpg');
 new Bus('bathroom', 'img/bathroom.jpg');
@@ -49,15 +52,21 @@ function render() {
     midIndex = genrateRandomIndex();
     rightIndex = genrateRandomIndex();
 
-    while ((leftIndex === midIndex) || (leftIndex === midIndex) || (midIndex === rightIndex)) {
+    while (leftIndex === midIndex || leftIndex === rightIndex || midIndex === rightIndex) {
+
+        
+
         leftIndex = genrateRandomIndex();
         midIndex = genrateRandomIndex();
-
+        rightIndex = genrateRandomIndex();
     }
 
     leftImageElment.src = Bus.allOfThem[leftIndex].sourc;
+    Bus.allOfThem[leftIndex].show++;
     midImageElment.src = Bus.allOfThem[midIndex].sourc;
+    Bus.allOfThem[midIndex].show++;
     rightImageElment.src = Bus.allOfThem[rightIndex].sourc;
+    Bus.allOfThem[rightIndex].show++;
 }
 render();
 // console.log(leftIndex);
@@ -65,48 +74,87 @@ render();
 // console.log(rightIndex);
 
 
-leftImageElment.addEventListener('click', handelClicking);
-midImageElment.addEventListener('click', handelClicking);
-rightImageElment.addEventListener('click', handelClicking);
+// leftImageElment.addEventListener('click', handelClicking);
+// midImageElment.addEventListener('click', handelClicking);
+// rightImageElment.addEventListener('click', handelClicking);
 
+sec1.addEventListener('click',handelClicking)
 
 function handelClicking(event) {
     count++;
     if (maxAttemp >= count) {
 
         if (event.target.id === 'leftImage') {
-            Bus.allOfThem[1].vote++;
+            Bus.allOfThem[leftIndex].vote++;
+            console.log("leftImage");
         } else if (event.target.id === 'rightImage') {
-            Bus.allOfThem[1].vote++;
+            Bus.allOfThem[rightIndex].vote++;
+            console.log("rightImage");
         } else if (event.target.id === 'midImage') {
-            Bus.allOfThem[1].vote++;
-        } render();
-        console.log(event.target.id);
-
+            Bus.allOfThem[midIndex].vote++;
+            console.log("midImage");
+        } 
+        // console.log(event.target.id);
+             render();
     } else {
-        renderUl();
-        leftImageElment.removeEventListener('click', handelClicking)
-        midImageElment.removeEventListener('click', handelClicking)
-        rightImageElment.removeEventListener('click', handelClicking)
+        
+       sec1.removeEventListener('click',handelClicking);
     }
 }
+
+let button = document.getElementById('btn');
+button.addEventListener('click', showingList);
+
+function showingList(){
+    renderUl();
+    chart();
+  button.removeEventListener('click',showingList);
+}
+
+let arrOfShow = [];
+let arrOfVote = [];
 
 function renderUl() {
     let ul = document.getElementById('list');
     for (let i = 0; i < Bus.allOfThem.length; i++) {
+        arrOfShow.push(Bus.allOfThem[i].show);
+        arrOfVote.push(Bus.allOfThem[i].vote);
         let li = document.createElement('li')
         ul.appendChild(li);
-        li.textContent = `${Bus.allOfThem[i].name} had ${Bus.allOfThem[i].vote} , and was seen  times`
+        li.textContent = `${Bus.allOfThem[i].name} had ${Bus.allOfThem[i].vote} , and was seen ${Bus.allOfThem[i].show} times`
 
     }
 }
-
-
-
-
-
 
 function genrateRandomIndex() {
     return Math.floor(Math.random() * Bus.allOfThem.length);
 }
 //  console.log(genrateRandomIndex());
+
+function chart(){
+let ctx = document.getElementById('myChart').getContext('2d');
+let myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: arrOfName,
+        datasets: [{
+            label: 'Number of votes',
+            data: arrOfVote,
+            backgroundColor: [
+               
+                'rgb(175, 0, 0) '
+            ],
+            borderColor: [
+                
+                'rgb(0, 0, 0)'
+            ],
+            borderWidth: 1
+        }, {label: 'Number Of Shown', data: arrOfShow, borderColor: [
+                
+            'rgb(0, 0, 0)'
+        ],borderWidth: 1
+    }]
+    }
+   
+})
+};
