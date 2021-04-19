@@ -53,10 +53,14 @@ function render() {
     rightIndex = genrateRandomIndex();
 
     while (leftIndex === midIndex || leftIndex === rightIndex || midIndex === rightIndex) {
+
+        
+
         leftIndex = genrateRandomIndex();
         midIndex = genrateRandomIndex();
         rightIndex = genrateRandomIndex();
     }
+
     leftImageElment.src = Bus.allOfThem[leftIndex].sourc;
     Bus.allOfThem[leftIndex].show++;
     midImageElment.src = Bus.allOfThem[midIndex].sourc;
@@ -93,10 +97,18 @@ function handelClicking(event) {
         // console.log(event.target.id);
              render();
     } else {
-        renderUl();
-        chart();
+        
        sec1.removeEventListener('click',handelClicking);
     }
+}
+
+let button = document.getElementById('btn');
+button.addEventListener('click', showingList);
+
+function showingList(){
+    renderUl();
+    chart();
+  button.removeEventListener('click',showingList);
 }
 
 let arrOfShow = [];
