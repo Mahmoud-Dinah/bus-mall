@@ -22,6 +22,7 @@ function Bus(name, source) {
     this.vote = 0;
     Bus.allOfThem.push(this);
     arrOfName.push(this.name)
+    
 }
 // console.log(Bus.allOfThem);
 
@@ -30,7 +31,7 @@ new Bus('banana', 'img/banana.jpg');
 new Bus('bathroom', 'img/bathroom.jpg');
 new Bus('boots', 'img/boots.jpg');
 new Bus('breakfast', 'img/breakfast.jpg');
-new Bus('bubblegum', 'img/bag.jpg');
+new Bus('bubblegum', 'img/bubblegum.jpg');
 new Bus('chair', 'img/chair.jpg');
 new Bus('cthulhu', 'img/cthulhu.jpg');
 new Bus('dog-duck', 'img/dog-duck.jpg');
@@ -45,6 +46,29 @@ new Bus('unicorn', 'img/unicorn.jpg');
 new Bus('usb', 'img/usb.gif');
 new Bus('water-can', 'img/water-can.jpg');
 new Bus('wine-glass', 'img/wine-glass.jpg');
+
+ // save to local storage
+function saveLs() {
+    let firstArr = JSON.stringify(Bus.allOfThem);
+    localStorage.setItem('result', firstArr)
+}
+
+// get the item from local stoarge
+
+function getLS() {
+    let data = localStorage.getItem('result');
+    console.log(data);
+
+    let order = JSON.parse(data);
+    if (order !== null){  
+    Bus.allOfThem= order;
+}
+    // renderUl();
+}
+
+
+
+
 
 let newImage = [];
 function render() {
@@ -99,11 +123,13 @@ function handelClicking(event) {
             console.log("midImage");
         } 
         // console.log(event.target.id);
+        saveLs();
              render();
     } else {
         
        sec1.removeEventListener('click',handelClicking);
     }
+    
 }
 
 let button = document.getElementById('btn');
@@ -112,6 +138,7 @@ button.addEventListener('click', showingList);
 function showingList(){
     renderUl();
     chart();
+    
   button.removeEventListener('click',showingList);
 }
 
@@ -120,20 +147,29 @@ let arrOfVote = [];
 
 function renderUl() {
     let ul = document.getElementById('list');
+    ul.innerHTML = ""
     for (let i = 0; i < Bus.allOfThem.length; i++) {
         arrOfShow.push(Bus.allOfThem[i].show);
         arrOfVote.push(Bus.allOfThem[i].vote);
         let li = document.createElement('li')
         ul.appendChild(li);
         li.textContent = `${Bus.allOfThem[i].name} had ${Bus.allOfThem[i].vote} , and was seen ${Bus.allOfThem[i].show} times`
-
+        
     }
+    
 }
 
 function genrateRandomIndex() {
     return Math.floor(Math.random() * Bus.allOfThem.length);
 }
 //  console.log(genrateRandomIndex());
+
+
+
+
+getLS();
+
+// chart 
 
 function chart(){
 let ctx = document.getElementById('myChart').getContext('2d');
@@ -162,3 +198,5 @@ let myChart = new Chart(ctx, {
    
 })
 };
+
+
