@@ -46,20 +46,24 @@ new Bus('usb', 'img/usb.gif');
 new Bus('water-can', 'img/water-can.jpg');
 new Bus('wine-glass', 'img/wine-glass.jpg');
 
-
+let newImage = [];
 function render() {
+    console.log('before',newImage);
     leftIndex = genrateRandomIndex();
     midIndex = genrateRandomIndex();
     rightIndex = genrateRandomIndex();
 
-    while (leftIndex === midIndex || leftIndex === rightIndex || midIndex === rightIndex) {
-
+    while (leftIndex === midIndex || midIndex === rightIndex || leftIndex === rightIndex || newImage.includes(leftIndex) ||newImage.includes(midIndex) || newImage.includes(rightIndex)) {
+        
         
 
         leftIndex = genrateRandomIndex();
         midIndex = genrateRandomIndex();
         rightIndex = genrateRandomIndex();
     }
+
+    newImage = [leftIndex,midIndex,rightIndex];
+console.log('after',newImage);
 
     leftImageElment.src = Bus.allOfThem[leftIndex].sourc;
     Bus.allOfThem[leftIndex].show++;
